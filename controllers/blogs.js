@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
 	try {
 		const blog = await Blog.create(req.body);
+		res.status(201).json(blog);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
@@ -28,6 +29,18 @@ router.post("/", async (req, res) => {
 router.delete("/:id", blogFinder, async (req, res) => {
 	await req.blog.destroy();
 	res.status(204).end();
+});
+
+router.put("/:id", blogFinder, async (req, res) => {
+	const { likes } = req.body;
+
+	if (!Number.isInteger(likes)) {
+		return res.status(400).json({ error: "likes must be an integer" });
+	}
+
+	req.blog.likes = likes;
+	await req.blog.save();
+	res.json(req.blog);
 });
 
 module.exports = router;
