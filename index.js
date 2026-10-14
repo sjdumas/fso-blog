@@ -4,12 +4,14 @@ const { connectToDatabase } = require("./util/db");
 const { errorHandler } = require("./util/middleware");
 const blogRouter = require("./controllers/blogs");
 const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 const app = express();
 
 app.use(express.json());
 app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 app.use(errorHandler);
 
