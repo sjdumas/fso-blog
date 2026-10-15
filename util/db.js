@@ -1,19 +1,19 @@
 const { Sequelize } = require("sequelize");
-const { DATABASE_URL } = require("./config");
+const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require("./config");
 
-const sequelize = new Sequelize(DATABASE_URL, {
+const databaseUrl = TESTING ? TEST_DATABASE_URL : DATABASE_URL;
+const useSsl = !databaseUrl.includes("sslmode=disable");
+
+const sequelize = new Sequelize(databaseUrl, {
 	dialect: "postgres",
-	dialectOptions: {
-		ssl: {
-			require: true,
-		},
-	},
+	dialectOptions: useSsl ? { ssl: { require: true } } : {},
 });
 
 const connectToDatabase = async () => {
 	try {
 		await sequelize.authenticate();
-		console.log("Connected to the database");
+		await sequelize.sync({ alter: true });
+		console.log(`Connected to the ${TESTING ? "test" : "development"} database`);
 	} catch (error) {
 		console.error("Unable to connect to the database:", error);
 		return process.exit(1);
@@ -22,7 +22,7 @@ const connectToDatabase = async () => {
 	return null;
 };
 
-module.exports = {
-	sequelize,
-	connectToDatabase
+module.exports = { 
+	sequelize, 
+	connectToDatabase 
 };
