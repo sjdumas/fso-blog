@@ -1,4 +1,8 @@
-GET http://localhost:3001/api/blogs?search=fowler
+GET http://localhost:3001/api/blogs?search=abramov
+
+###
+
+GET http://localhost:3001/api/blogs?search=react
 
 ###
 
@@ -6,7 +10,7 @@ GET http://localhost:3001/api/blogs?search=FOWLER
 
 ###
 
-GET http://localhost:3001/api/blogs?search=react
+GET http://localhost:3001/api/blogs?search=zzz
 
 ###
 
