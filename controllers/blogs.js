@@ -48,12 +48,13 @@ router.post("/", tokenExtractor, async (req, res) => {
 		return res.status(401).json({ error: "user not found" });
 	}
 
-	const { author, url, title, likes } = req.body;
+	const { author, url, title, likes, year } = req.body;
 	const blog = await Blog.create({
 		author,
 		url,
 		title,
 		likes,
+		year,
 		userId: user.id,
 	});
 
