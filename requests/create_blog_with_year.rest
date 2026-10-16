@@ -1,0 +1,21 @@
+# @name login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "matti@example.com",
+  "password": "secret"
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "author": "Martin Fowler",
+  "url": "https://martinfowler.com/",
+  "title": "Martin Fowler's Blog",
+  "year": 2020
+}
