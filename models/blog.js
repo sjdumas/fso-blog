@@ -23,7 +23,17 @@ Blog.init(
 		},
 		likes: {
 			type: DataTypes.INTEGER,
+			allowNull: false,
 			defaultValue: 0,
+			validate: {
+				isInt: {
+					msg: "likes must be an integer",
+				},
+				min: {
+					args: [0],
+					msg: "likes must not be negative",
+				},
+			},
 		},
 		year: {
 			type: DataTypes.INTEGER,
