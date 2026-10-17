@@ -14,5 +14,5 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "read": false
+  "read": true
 }
