@@ -1,0 +1,25 @@
+# @name login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "matti@example.com",
+  "password": "secret"
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "author": "Session Tester",
+  "url": "https://example.com/",
+  "title": "Testing sessions"
+}
+
+###
+
+DELETE http://localhost:3001/api/logout
+Authorization: Bearer {{login.response.body.token}}
