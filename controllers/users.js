@@ -20,19 +20,33 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+	const { read } = req.query;
+
+	if (read !== undefined && read !== "true" && read !== "false") {
+		return res.status(400).json({ error: "read must be true or false" });
+	}
+
+	const through = { attributes: ["read", "id"] };
+
+	if (read !== undefined) {
+		through.where = { read: read === "true" };
+	}
+
 	const user = await User.findByPk(req.params.id, {
+		attributes: { exclude: ["createdAt", "updatedAt"] },
 		include: {
 			model: Blog,
 			as: "readings",
 			attributes: { exclude: ["userId", "createdAt", "updatedAt"] },
-			through: { attributes: ["read", "id"] },
+			through,
+			required: false,
 		},
 	});
 
 	if (!user) {
 		return res.status(404).json({ error: "user not found" });
 	}
-	
+
 	res.json(user);
 });
 
