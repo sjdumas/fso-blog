@@ -4,76 +4,76 @@ const { Blog, User } = require("../models");
 const { tokenExtractor } = require("../util/middleware");
 
 const blogFinder = async (req, res, next) => {
-	req.blog = await Blog.findByPk(req.params.id);
+  req.blog = await Blog.findByPk(req.params.id);
 
-	if (!req.blog) {
-		return res.status(404).json({ error: "blog not found" });
-	}
+  if (!req.blog) {
+    return res.status(404).json({ error: "blog not found" });
+  }
 
-	next();
+  next();
 };
 
 router.get("/", async (req, res) => {
-	const where = {};
+  const where = {};
 
-	if (req.query.search) {
-		const pattern = `%${req.query.search}%`;
+  if (req.query.search) {
+    const pattern = `%${req.query.search}%`;
 
-		where[Op.or] = [
-			{ title: { [Op.iLike]: pattern } },
-			{ author: { [Op.iLike]: pattern } },
-		];
-	}
+    where[Op.or] = [
+      { title: { [Op.iLike]: pattern } },
+      { author: { [Op.iLike]: pattern } },
+    ];
+  }
 
-	const blogs = await Blog.findAll({
-		attributes: { exclude: ["userId"] },
-		include: {
-			model: User,
-			attributes: ["name"],
-		},
-		where,
-		order: [
-			["likes", "DESC"],
-			["id", "ASC"],
-		],
-	});
+  const blogs = await Blog.findAll({
+    attributes: { exclude: ["userId"] },
+    include: {
+      model: User,
+      attributes: ["name"],
+    },
+    where,
+    order: [
+      ["likes", "DESC"],
+      ["id", "ASC"],
+    ],
+  });
 
-	res.json(blogs);
+  res.json(blogs);
 });
 
 router.post("/", tokenExtractor, async (req, res) => {
-	const user = await User.findByPk(req.decodedToken.id);
+  const user = await User.findByPk(req.decodedToken.id);
 
-	if (!user) {
-		return res.status(401).json({ error: "user not found" });
-	}
+  if (!user) {
+    return res.status(401).json({ error: "user not found" });
+  }
 
-	const { author, url, title, likes, year } = req.body;
-	const blog = await Blog.create({
-		author,
-		url,
-		title,
-		likes,
-		year,
-		userId: user.id,
-	});
+  const { author, url, title, likes, year } = req.body;
+  const blog = await Blog.create({
+    author,
+    url,
+    title,
+    likes,
+    year,
+    userId: user.id,
+  });
 
-	res.status(201).json(blog);
+  res.status(201).json(blog);
 });
 
 router.delete("/:id", tokenExtractor, blogFinder, async (req, res) => {
-	if (req.blog.userId !== req.decodedToken.id) {
-		return res.status(403).json({ error: "only the creator can delete a blog" });
-	}
+  if (req.blog.userId !== req.decodedToken.id) {
+    return res.status(403).json({ error: "only the creator can delete a blog" });
+  }
 
-	await req.blog.destroy();
-	res.status(204).end();
+  await req.blog.destroy();
+  res.status(204).end();
 });
 
 router.put("/:id", blogFinder, async (req, res) => {
-	req.blog.likes = req.body.likes;
-	await req.blog.save();
-	res.json(req.blog);
+  req.blog.likes = req.body.likes;
+  await req.blog.save();
+  res.json(req.blog);
 });
 
 module.exports = router;

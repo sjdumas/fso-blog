@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-	res.status(200).send("OK");
+  res.status(200).send("OK");
 });
 
 app.use("/api/blogs", blogsRouter);
@@ -26,16 +26,16 @@ app.use("/api/readinglists", readingListRouter);
 app.use("/api/logout", logoutRouter);
 
 if (TESTING) {
-	app.use("/api/reset", resetRouter);
+  app.use("/api/reset", resetRouter);
 }
 
 app.use(errorHandler);
 
 const start = async () => {
-	await connectToDatabase();
-	app.listen(PORT, () => {
-		console.log(`Server running on port ${PORT}`);
-	});
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 };
 
 start();

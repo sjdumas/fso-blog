@@ -13,8 +13,8 @@ User.hasMany(Session);
 Session.belongsTo(User);
 
 module.exports = { 
-	Blog,
-	User,
-	ReadingList,
-	Session
+  Blog,
+  User,
+  ReadingList,
+  Session
 };

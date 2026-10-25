@@ -1,40 +1,40 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = {
-	up: async ({ context: queryInterface }) => {
-		await queryInterface.createTable("reading_lists", {
-			id: {
-				type: DataTypes.INTEGER,
-				primaryKey: true,
-				autoIncrement: true,
-			},
-			user_id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				references: { model: "users", key: "id" },
-				onDelete: "CASCADE",
-			},
-			blog_id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				references: { model: "blogs", key: "id" },
-				onDelete: "CASCADE",
-			},
-			read: {
-				type: DataTypes.BOOLEAN,
-				allowNull: false,
-				defaultValue: false,
-			},
-		});
+  up: async ({ context: queryInterface }) => {
+    await queryInterface.createTable("reading_lists", {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: "users", key: "id" },
+        onDelete: "CASCADE",
+      },
+      blog_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: "blogs", key: "id" },
+        onDelete: "CASCADE",
+      },
+      read: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+    });
 
-		await queryInterface.addConstraint("reading_lists", {
-			fields: ["user_id", "blog_id"],
-			type: "unique",
-			name: "reading_lists_user_id_blog_id_key",
-		});
-	},
+    await queryInterface.addConstraint("reading_lists", {
+      fields: ["user_id", "blog_id"],
+      type: "unique",
+      name: "reading_lists_user_id_blog_id_key",
+    });
+  },
 
-	down: async ({ context: queryInterface }) => {
-		await queryInterface.dropTable("reading_lists");
-	},
+  down: async ({ context: queryInterface }) => {
+    await queryInterface.dropTable("reading_lists");
+  },
 };
