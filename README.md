@@ -58,7 +58,9 @@ This project contains a REST API for users, blogs, authors, and reading lists, b
 │   ├── config.js             Reads settings from environment variables
 │   ├── db.js                 Database connection and migration runner
 │   └── middleware.js         Token extraction and error handling middleware
-├── cli.js                    Script from an early exercise that prints all blogs
+├── .editorconfig             Editor settings: 2-space indentation, LF line endings, UTF-8
+├── .gitattributes            Normalizes line endings to LF in the repository
+├── cli.js                    Script from an early exercise that prints all blogs (always connects with SSL)
 ├── commands.sql              SQL statements from the early database exercises
 ├── index.js                  Configures and starts the Express server
 └── package.json              Dependencies and npm scripts
@@ -132,7 +134,7 @@ To disable a user, set the flag directly in the database:
 UPDATE users SET disabled = true WHERE username = 'alice@example.com';
 ```
 
-A disabled user cannot log in, and any active sessions they have are rejected.
+A disabled user cannot log in, and any active sessions they have are rejected. Disabling a user does not delete their sessions, so setting `disabled` back to `false` makes their existing tokens work again.
 
 ## API
 
@@ -194,7 +196,7 @@ All routes are under `/api`. Requests with a JSON body need the `Content-Type: a
 | Status | Meaning                                                                 |
 | ------ | ----------------------------------------------------------------------- |
 | `400`  | Invalid or missing data. Validation errors are returned as an array, for example `{ "error": ["username must be a valid email address"] }` |
-| `401`  | Missing, invalid, or expired token, disabled account, or not the owner of a reading list entry |
+| `401`  | Unknown username at login, missing or invalid token, session ended by logout, disabled account, or not the owner of a reading list entry |
 | `403`  | Logged in, but not the creator of the blog being deleted                |
 | `404`  | The requested resource does not exist                                   |
 
